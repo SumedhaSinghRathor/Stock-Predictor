@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Search from "../components/Search";
 
 function Fetch() {
   return (
@@ -19,6 +20,7 @@ function Fetch() {
           models.
         </h2>
       </div>
+      <Search />
     </div>
   );
 }
