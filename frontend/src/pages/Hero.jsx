@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Hero() {
   return (
@@ -54,11 +55,11 @@ function Hero() {
           for the backend, React for the frontend, and TensorFlow/Keras for the
           prediction logic.
         </p>
-        <a href="/fetch" className="w-fit">
+        <Link to="/fetch" className="w-fit">
           <button className="font-bold text-purple bg-orange active:bg-red focus:outline-none py-2 px-6 rounded-lg w-fit cursor-pointer hover:outline-offset-2 hover:outline-2 hover:outline-red">
             Predict
           </button>
-        </a>
+        </Link>
       </div>
     </div>
   );
