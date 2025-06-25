@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Design from "../components/Design";
 import Logo from "../components/Logo";
 
@@ -15,9 +16,12 @@ function Hero() {
           for the backend, React for the frontend, and TensorFlow/Keras for the
           prediction logic.
         </p>
-        <button className="font-bold text-purple bg-orange active:bg-red focus:outline-none py-2 px-6 rounded-lg w-fit cursor-pointer hover:outline-offset-2 hover:outline-2 hover:outline-red">
+        <Link
+          to="/search"
+          className="font-bold text-purple bg-orange active:bg-red focus:outline-none py-2 px-6 rounded-lg w-fit cursor-pointer hover:outline-offset-2 hover:outline-2 hover:outline-red"
+        >
           Predict
-        </button>
+        </Link>
       </div>
       <Design />
     </section>
