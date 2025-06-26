@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Fetch from "./Fetch";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 function Predict() {
   const { symbol } = useParams();
@@ -10,6 +10,7 @@ function Predict() {
     setSelectedDuration(e.target.value);
   };
   const ref = useRef();
+  const location = useLocation();
 
   useEffect(() => {
     const canvas = ref.current;
@@ -24,7 +25,8 @@ function Predict() {
       <Fetch />
       <section className="p-5 flex flex-col gap-4">
         <h1 className="text-2xl text-center text-red w-fit mx-auto">
-          <span className="font-bold">{symbol}</span> - Proper Stock Name{" "}
+          <span className="font-bold">{symbol}</span> -{" "}
+          {location.state?.description}{" "}
           <span className="bg-orange text-white py-1 px-2 text-base m-auto rounded-full">
             Predicted
           </span>
@@ -37,9 +39,11 @@ function Predict() {
           {durations.map((duration) => (
             <label
               key={duration}
-              onClick={() => document.getElementById(duration).click()}
-              onChange={handleChange}
-              className="border-2 border-red rounded-full px-4 font-bold text-lg has-checked:bg-red hover:outline-2 outline-offset-2 outline-red has-checked:text-white has-checked:outline-none"
+              className={`border-2 border-red rounded-full px-4 font-bold text-lg ${
+                selectedDuration === duration
+                  ? "bg-red text-white"
+                  : "hover:outline-2 outline-offset-2 outline-red"
+              }`}
             >
               <input
                 type="radio"
@@ -47,6 +51,7 @@ function Predict() {
                 name="duration"
                 value={duration}
                 className="hidden"
+                onChange={handleChange}
               />
               {duration}
             </label>
