@@ -49,18 +49,36 @@ function Search({ onSelect }) {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+
+    try {
+      const response = await axios.get(`${BASE_URL}/search`, {
+        params: { q: query.trim(), token: API_KEY },
+      });
+
+      const matches = response.data.result;
+      const match = matches.find(
+        (item) => item.symbol.toLowerCase() === query.trim().toLowerCase()
+      );
+
+      if (match) {
+        navigate(`/search/${match.symbol}`, {
+          state: { description: match.description },
+        });
+      } else {
+        navigate("/not-found");
+      }
+    } catch (error) {
+      console.error("API fetch failed:", error);
+      navigate("/not-found");
+    }
+  };
+
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const selected = results.find((r) => r.symbol === query.trim());
-        if (query.trim()) {
-          navigate(`/search/${query.trim()}`, {
-            state: { description: selected?.description || "" },
-          });
-          setShowDropdown(false);
-        }
-      }}
+      onSubmit={handleSubmit}
       className="border-2 border-red size-fit p-1 rounded-xl mx-auto m-4"
     >
       <div className="relative">
