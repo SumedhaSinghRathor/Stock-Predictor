@@ -8,8 +8,8 @@ function Search({ onSelect }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
-  const API_KEY = import.meta.env.VITE_FINNHUB_API_KEY;
-  const BASE_URL = "https://finnhub.io/api/v1";
+  const API_KEY = import.meta.env.VITE_ALPHA_VANTAGE_API_KEY;
+  const BASE_URL = "https://www.alphavantage.co/query";
 
   useEffect(() => {
     const fetchSymbols = async () => {
@@ -19,13 +19,15 @@ function Search({ onSelect }) {
       }
 
       try {
-        const response = await axios.get(`${BASE_URL}/search`, {
+        const response = await axios.get(BASE_URL, {
           params: {
-            q: query,
-            token: API_KEY,
+            function: "SYMBOL_SEARCH",
+            keywords: query,
+            apikey: API_KEY,
           },
         });
-        setResults(response.data.result.slice(0, 5));
+        const matches = response.data.bestMatches || [];
+        setResults(matches.slice(0, 5));
         setShowDropdown(true);
       } catch (error) {
         console.error("Error fetching search results: ", error);
@@ -36,15 +38,17 @@ function Search({ onSelect }) {
     return () => clearTimeout(timeoutId);
   }, [query]);
 
-  const handleSelect = (symbol) => {
-    setQuery(symbol.symbol);
+  const handleSelect = (item) => {
+    const symbol = item["1. symbol"];
+    const description = item["2. name"];
+    setQuery(symbol);
     setResults([]);
     setShowDropdown(false);
 
     if (onSelect) {
-      onSelect(symbol.symbol);
-      navigate(`/search/${symbol.symbol}`, {
-        state: { description: symbol.description },
+      onSelect(symbol);
+      navigate(`/search/${symbol}`, {
+        state: { description },
       });
     }
   };
@@ -54,18 +58,20 @@ function Search({ onSelect }) {
     if (!query.trim()) return;
 
     try {
-      const response = await axios.get(`${BASE_URL}/search`, {
-        params: { q: query.trim(), token: API_KEY },
+      const response = await axios.get(BASE_URL, {
+        params: {
+          function: "SYMBOL_SEARCH",
+          keywords: query.trim(),
+          apikey: API_KEY,
+        },
       });
-
-      const matches = response.data.result;
+      const matches = response.data.bestMatches || [];
       const match = matches.find(
-        (item) => item.symbol.toLowerCase() === query.trim().toLowerCase()
+        (item) => item["1. symbol"].toLowerCase() === query.trim().toLowerCase()
       );
-
       if (match) {
-        navigate(`/search/${match.symbol}`, {
-          state: { description: match.description },
+        navigate(`/search/${match["1. symbol"]}`, {
+          state: { description: match["2. name"] },
         });
       } else {
         navigate("/not-found");
@@ -99,12 +105,12 @@ function Search({ onSelect }) {
           <ul className="absolute z-10 w-full bg-white border-2 border-red rounded-b shadow mt-1 max-h-60 overflow-y-auto">
             {results.map((item) => (
               <li
-                key={item.symbol}
+                key={item["1. symbol"]}
                 onClick={() => handleSelect(item)}
                 className="p-2 cursor-pointer hover:bg-red/10 bg-white flex justify-between"
               >
-                <span className="font-bold">{item.symbol}</span>
-                <span>{item.description}</span>
+                <span className="font-bold">{item["1. symbol"]}</span>
+                <span>{item["2. name"]}</span>
               </li>
             ))}
           </ul>

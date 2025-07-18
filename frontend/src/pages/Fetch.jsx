@@ -11,7 +11,7 @@ function Fetch() {
         </Link>
       </nav>
       <div className="text-center py-8">
-        <h1 className="text-red text-4xl font-bold leading-relaxed">
+        <h1 className="text-red text-4xl font-bold leading-relaxed italic underline underline-offset-4">
           Forecast. Invest. Repeat.
         </h1>
         <h2 className="text-orange text-2xl font-semibold leading-relaxed">

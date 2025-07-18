@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import Fetch from "./Fetch";
 import { useLocation, useParams } from "react-router-dom";
 import Canvas from "../components/Canvas";
